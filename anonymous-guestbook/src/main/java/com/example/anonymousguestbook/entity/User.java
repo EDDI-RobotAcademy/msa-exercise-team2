@@ -2,6 +2,7 @@ package com.example.anonymousguestbook.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 @Entity
 @Getter
 @Setter
