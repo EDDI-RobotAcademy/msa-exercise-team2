@@ -15,7 +15,7 @@ import java.util.Optional;
 @Slf4j
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/")
+@RequestMapping("/api/guestbook")
 @RequiredArgsConstructor
 public class GuestbookController {
 

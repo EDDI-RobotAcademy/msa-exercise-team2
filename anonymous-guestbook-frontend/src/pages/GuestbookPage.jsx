@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from "react";
 import GuestbookForm from "../components/GuestbookForm";
 import GuestbookList from "../components/GuestbookList";
-import styled from 'styled-components'
-import { getGuestbookList, postGuestbook, deleteGuestbook, updateGuestbook } from "../api";  // 수정됨
+import styled from 'styled-components';
+import {
+  getGuestbookList,
+  postGuestbook,
+  deleteGuestbook,
+  updateGuestbook,
+} from "../api";
 
 function GuestbookPage() {
   const [list, setList] = useState([]);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true); // ✅ 처음부터 열림 상태
 
   // 방명록 목록 불러오기
   useEffect(() => {
@@ -16,9 +21,10 @@ function GuestbookPage() {
   const fetchGuestbooks = async () => {
     try {
       const res = await getGuestbookList();
+      console.log("📜 방명록 리스트:", res.data); // ✅ 디버깅용 로그
       setList(res.data);
     } catch (err) {
-      console.error("방명록 불러오기 실패", err);
+      console.error("❌ 방명록 불러오기 실패", err);
     }
   };
 
@@ -28,19 +34,18 @@ function GuestbookPage() {
       await postGuestbook(data);
       await fetchGuestbooks();
     } catch (err) {
-      console.error("글 추가 실패", err);
+      console.error("❌ 글 추가 실패", err);
     }
   };
 
   // 글 삭제
   const handleDelete = async (id, password) => {
-    console.log("삭제 시작", id);
     const confirm = window.confirm("정말 삭제하시겠습니까?");
     if (!confirm) return;
 
     try {
       await deleteGuestbook(id, password);
-      setList(prev => prev.filter(item => item.id !== id));
+      setList((prev) => prev.filter((item) => item.id !== id));
     } catch (error) {
       const msg = error.response?.data || "삭제 실패: 알 수 없는 오류가 발생했습니다.";
       alert(msg);
@@ -51,8 +56,8 @@ function GuestbookPage() {
   const handleUpdate = async (id, updatedItem) => {
     try {
       await updateGuestbook(id, updatedItem);
-      setList(prev =>
-          prev.map(item => (item.id === id ? { ...item, ...updatedItem } : item))
+      setList((prev) =>
+          prev.map((item) => (item.id === id ? { ...item, ...updatedItem } : item))
       );
     } catch (error) {
       const msg = error.response?.data || "수정 실패: 알 수 없는 오류가 발생했습니다.";
@@ -61,43 +66,40 @@ function GuestbookPage() {
   };
 
   return (
-    <>
-      <Container>
-        <h1>익명 방명록</h1>
-        <ToggleButton onClick={() => setIsOpen(!isOpen)}>
-          {isOpen ? '게시판 닫기' : '게시판 열기'}
-        </ToggleButton>
-        {!isOpen && (
-          <ImageWrapper>
-            <RandomImage
-              src="https://picsum.photos/400/300"
-              alt="random"
-            />
-          </ImageWrapper>
-        )}
-        <DropdownContainer isOpen={isOpen}>
-          {isOpen && (
-            <>
-              {/* 글 작성 폼 */}
-              <GuestbookForm onAdd={handleAdd} />
+      <>
+        <Container>
+          <h1>익명 방명록</h1>
+          <ToggleButton onClick={() => setIsOpen(!isOpen)}>
+            {isOpen ? "게시판 닫기" : "게시판 열기"}
+          </ToggleButton>
 
-              {/* 방명록 리스트 */}
-              <GuestbookList
-                list={list}
-                onDelete={handleDelete}
-                onUpdate={handleUpdate}
-              />
-            </>
+          {!isOpen && (
+              <ImageWrapper>
+                <RandomImage src="https://picsum.photos/400/300" alt="random" />
+              </ImageWrapper>
           )}
-        </DropdownContainer>
 
-      </Container>
-    </>
+          <DropdownContainer isOpen={isOpen}>
+            {isOpen && (
+                <>
+                  {/* 글 작성 폼 */}
+                  <GuestbookForm onAdd={handleAdd} />
+
+                  {/* 방명록 리스트 */}
+                  <GuestbookList
+                      list={list}
+                      onDelete={handleDelete}
+                      onUpdate={handleUpdate}
+                  />
+                </>
+            )}
+          </DropdownContainer>
+        </Container>
+      </>
   );
 }
 
 export default GuestbookPage;
-
 const Container = styled.div`
   display: flex;
   align-items: center;
@@ -123,7 +125,7 @@ const ToggleButton = styled.button`
 `;
 
 const DropdownContainer = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'isOpen'
+  shouldForwardProp: (prop) => prop !== 'isOpen',
 })`
   margin-top: 1rem;
   border: 3px solid #ddd;
@@ -132,17 +134,16 @@ const DropdownContainer = styled.div.withConfig({
   padding-right: 1.5rem;
 
   max-height: ${(props) => (props.isOpen ? '1000px' : '0')};
-  overflow-y: auto;  
+  overflow-y: auto;
   opacity: ${(props) => (props.isOpen ? 1 : 0)};
   transition: max-height 0.4s ease, opacity 0.4s ease;
 `;
-
 
 const ImageWrapper = styled.div`
   width: 100%;
   max-width: 600px;
   margin-top: 1rem;
-  padding: 0 1rem; /* ✅ 좌우 여백 추가 */
+  padding: 0 1rem;
   border-radius: 0.5rem;
   overflow: hidden;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
