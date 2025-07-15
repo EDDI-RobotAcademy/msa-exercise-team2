@@ -21,7 +21,7 @@ spring:
           predicates:
             - Path=/api/account/**
           filters:
-            - StripPrefix=1
+            - StripPrefix=2
             - SetRequestHeader=Accept, application/json
 
       discovery:

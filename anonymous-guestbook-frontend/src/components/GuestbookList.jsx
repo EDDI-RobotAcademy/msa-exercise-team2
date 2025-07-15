@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
 
 function GuestbookList({ list, onDelete, onUpdate }) {
     const [editingId, setEditingId] = useState(null);
@@ -71,3 +72,13 @@ function GuestbookList({ list, onDelete, onUpdate }) {
 }
 
 export default GuestbookList;
+
+const Button = styled.button`
+  background-color: #007bff;
+  color: white;
+  padding: 0.75rem 1.25rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: bold;
+`;

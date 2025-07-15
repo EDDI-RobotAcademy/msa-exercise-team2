@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "/api/account")
 public class AccountController {
 
     private final AccountService accountService;

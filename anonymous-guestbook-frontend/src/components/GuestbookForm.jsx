@@ -50,7 +50,7 @@ const FormContainer = styled.form`
   padding: 1rem;
   background-color: #f9fafb;
   border-radius: 0.5rem;
-  border: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
 `;
 
 const Input = styled.input`
